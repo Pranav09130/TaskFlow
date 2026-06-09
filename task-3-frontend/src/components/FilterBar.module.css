@@ -1,0 +1,76 @@
+/* FilterBar.module.css */
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.left {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tabGroup {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.tab {
+  background: none;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.tab:hover { color: var(--text); }
+
+.tab.active {
+  background: var(--surface2);
+  color: var(--accent-light);
+  border: 1px solid var(--border);
+}
+
+.count {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+.sortSelect {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  padding: 6px 10px;
+  border-radius: 7px;
+  transition: border-color 0.2s;
+}
+
+.sortSelect:focus { border-color: var(--accent); color: var(--text); }
+
+@media (max-width: 600px) {
+  .bar { flex-direction: column; align-items: flex-start; }
+  .right { align-self: flex-end; }
+}

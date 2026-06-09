@@ -1,0 +1,56 @@
+/* =============================================
+   TASKFLOW — Global Styles
+   src/index.css
+   ============================================= */
+
+:root {
+  --bg: #0F0F13;
+  --surface: #17171E;
+  --surface2: #1E1E28;
+  --border: #2A2A38;
+  --accent: #7C6AF7;
+  --accent-light: #A89EFA;
+  --accent-glow: rgba(124, 106, 247, 0.2);
+  --green: #4ECCA3;
+  --red: #FF6B8A;
+  --yellow: #FFD166;
+  --text: #F0EFF8;
+  --muted: #6B6A80;
+  --font: 'Bricolage Grotesque', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, textarea, select {
+  font-family: var(--font);
+  outline: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
