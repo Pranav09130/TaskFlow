@@ -41,7 +41,7 @@ function App() {
           </div>
           <div className={styles.apiStatus}>
             <span className={styles.dot}></span>
-            <span>API: localhost:5000</span>
+            <span>API: {import.meta.env.VITE_API_URL || 'localhost:5000'}</span>
           </div>
         </div>
       </nav>
