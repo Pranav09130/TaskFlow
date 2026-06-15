@@ -1,0 +1,128 @@
+/* ── Auth Pages ──────────────────────────────────────────────── */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.5px;
+}
+
+.auth-header p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #f9fafb;
+}
+
+.form-group input:focus {
+  border-color: #667eea;
+  background: #ffffff;
+}
+
+/* Error banner */
+.auth-error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Submit button */
+.auth-btn {
+  width: 100%;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: 0.4rem;
+}
+
+.auth-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.auth-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Switch link */
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.auth-switch a {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
