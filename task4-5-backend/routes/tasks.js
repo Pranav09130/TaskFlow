@@ -1,19 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const getDb = require('../db');
 const authenticateToken = require('../middleware/auth');
 
-// All task routes are protected — user must be logged in
+// All task routes are protected
 router.use(authenticateToken);
 
-// GET /api/tasks — get only the logged-in user's tasks
+// GET /api/tasks
 router.get('/', async (req, res) => {
   const userId = req.user.userId;
   try {
-    const [rows] = await db.promise().query(
-      'SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC',
-      [userId]
-    );
+    const db = await getDb();
+    const [rows] = await db.query('SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC', [userId]);
     res.json(rows);
   } catch (err) {
     console.error('Fetch tasks error:', err);
@@ -21,21 +19,19 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/tasks — create a task for the logged-in user
+// POST /api/tasks
 router.post('/', async (req, res) => {
   const userId = req.user.userId;
-  const { title, description, status } = req.body;
-
-  if (!title) {
-    return res.status(400).json({ error: 'Task title is required.' });
-  }
-
+  const { text, title, priority, description, status } = req.body;
+  const taskTitle = text || title;
+  if (!taskTitle) return res.status(400).json({ error: 'Task title is required.' });
   try {
-    const [result] = await db.promise().query(
-      'INSERT INTO tasks (user_id, title, description, status) VALUES (?, ?, ?, ?)',
-      [userId, title, description || '', status || 'pending']
+    const db = await getDb();
+    const [result] = await db.query(
+      'INSERT INTO tasks (user_id, title, description, status, priority) VALUES (?, ?, ?, ?, ?)',
+      [userId, taskTitle, description || '', status || 'pending', priority || 'medium']
     );
-    const [rows] = await db.promise().query('SELECT * FROM tasks WHERE id = ?', [result.insertId]);
+    const [rows] = await db.query('SELECT * FROM tasks WHERE id = ?', [result.insertId]);
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error('Create task error:', err);
@@ -43,34 +39,26 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/tasks/:id — update a task (only if it belongs to this user)
+// PUT /api/tasks/:id
 router.put('/:id', async (req, res) => {
   const userId = req.user.userId;
   const taskId = req.params.id;
-  const { title, description, status } = req.body;
-
+  const { text, title, priority, description, status, completed } = req.body;
   try {
-    const [existing] = await db.promise().query(
-      'SELECT * FROM tasks WHERE id = ? AND user_id = ?',
-      [taskId, userId]
+    const db = await getDb();
+    const [existing] = await db.query('SELECT * FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
+    if (existing.length === 0) return res.status(404).json({ error: 'Task not found or access denied.' });
+    const t = existing[0];
+    const newTitle = text || title || t.title;
+    const newCompleted = completed !== undefined ? completed : t.completed;
+    const newPriority = priority || t.priority;
+    const newStatus = status || t.status;
+    const newDesc = description !== undefined ? description : t.description;
+    await db.query(
+      'UPDATE tasks SET title = ?, description = ?, status = ?, priority = ?, completed = ? WHERE id = ? AND user_id = ?',
+      [newTitle, newDesc, newStatus, newPriority, newCompleted, taskId, userId]
     );
-
-    if (existing.length === 0) {
-      return res.status(404).json({ error: 'Task not found or access denied.' });
-    }
-
-    await db.promise().query(
-      'UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ? AND user_id = ?',
-      [
-        title || existing[0].title,
-        description !== undefined ? description : existing[0].description,
-        status || existing[0].status,
-        taskId,
-        userId
-      ]
-    );
-
-    const [updated] = await db.promise().query('SELECT * FROM tasks WHERE id = ?', [taskId]);
+    const [updated] = await db.query('SELECT * FROM tasks WHERE id = ?', [taskId]);
     res.json(updated[0]);
   } catch (err) {
     console.error('Update task error:', err);
@@ -78,22 +66,15 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/tasks/:id — delete (only if it belongs to this user)
+// DELETE /api/tasks/:id
 router.delete('/:id', async (req, res) => {
   const userId = req.user.userId;
   const taskId = req.params.id;
-
   try {
-    const [existing] = await db.promise().query(
-      'SELECT id FROM tasks WHERE id = ? AND user_id = ?',
-      [taskId, userId]
-    );
-
-    if (existing.length === 0) {
-      return res.status(404).json({ error: 'Task not found or access denied.' });
-    }
-
-    await db.promise().query('DELETE FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
+    const db = await getDb();
+    const [existing] = await db.query('SELECT id FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
+    if (existing.length === 0) return res.status(404).json({ error: 'Task not found or access denied.' });
+    await db.query('DELETE FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
     res.json({ message: 'Task deleted successfully.' });
   } catch (err) {
     console.error('Delete task error:', err);
