@@ -186,7 +186,7 @@ export default function TasksPage() {
                       {task.completed && '✓'}
                     </button>
                     <div className={styles.taskContent}>
-                      <p className={`${styles.taskText} ${task.completed ? styles.strike : ''}`}>{task.text}</p>
+                      <p className={`${styles.taskText} ${task.completed ? styles.strike : ''}`}>{task.title || task.text}</p>
                       <div className={styles.taskMeta}>
                         <span className={styles.priorityTag} style={{color:PRIORITY[task.priority]?.color, borderColor:PRIORITY[task.priority]?.color}}>
                           {PRIORITY[task.priority]?.dot} {task.priority}
