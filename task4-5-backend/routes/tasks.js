@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const getDb = require('../db');
+const db = require('../db'); // ← changed
 const authenticateToken = require('../middleware/auth');
 
-// All task routes are protected
 router.use(authenticateToken);
 
-// GET /api/tasks
 router.get('/', async (req, res) => {
   const userId = req.user.userId;
   try {
-    const db = await getDb();
+    // ← removed: const db = await getDb();
     const [rows] = await db.query('SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC', [userId]);
     res.json(rows);
   } catch (err) {
@@ -19,14 +17,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/tasks
 router.post('/', async (req, res) => {
   const userId = req.user.userId;
   const { text, title, priority, description, status } = req.body;
   const taskTitle = text || title;
   if (!taskTitle) return res.status(400).json({ error: 'Task title is required.' });
   try {
-    const db = await getDb();
+    // ← removed: const db = await getDb();
     const [result] = await db.query(
       'INSERT INTO tasks (user_id, title, description, status, priority) VALUES (?, ?, ?, ?, ?)',
       [userId, taskTitle, description || '', status || 'pending', priority || 'medium']
@@ -39,13 +36,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/tasks/:id
 router.put('/:id', async (req, res) => {
   const userId = req.user.userId;
   const taskId = req.params.id;
   const { text, title, priority, description, status, completed } = req.body;
   try {
-    const db = await getDb();
+    // ← removed: const db = await getDb();
     const [existing] = await db.query('SELECT * FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
     if (existing.length === 0) return res.status(404).json({ error: 'Task not found or access denied.' });
     const t = existing[0];
@@ -66,12 +62,11 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/tasks/:id
 router.delete('/:id', async (req, res) => {
   const userId = req.user.userId;
   const taskId = req.params.id;
   try {
-    const db = await getDb();
+    // ← removed: const db = await getDb();
     const [existing] = await db.query('SELECT id FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
     if (existing.length === 0) return res.status(404).json({ error: 'Task not found or access denied.' });
     await db.query('DELETE FROM tasks WHERE id = ? AND user_id = ?', [taskId, userId]);
