@@ -196,7 +196,7 @@ export default function TasksPage() {
                       </div>
                     </div>
                     <div className={styles.taskActions}>
-                      <button className={styles.editBtn} onClick={() => { setEditId(task.id); setEditText(task.text); setEditPri(task.priority) }}>✎</button>
+                      <button className={styles.editBtn} onClick={() => { setEditId(task.id); setEditText(task.title || task.text); setEditPri(task.priority) }}>✎</button>
                       <button className={styles.deleteBtn} onClick={() => handleDelete(task.id)}>✕</button>
                     </div>
                   </div>
